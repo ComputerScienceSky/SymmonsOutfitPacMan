@@ -27,62 +27,62 @@ class Boundary {
 
 class Player {
     constructor({ position, velocity }) {
-        this.position = position
-        this.velocity = velocity
-        this.radius = 15
+        this.position = position;
+        this.velocity = velocity;
+        this.radius = 15;
+        this.image = new Image();
+        this.image.src = './Images/symons.png'; 
     }
 
     draw() {
-        c.beginPath()
-        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
-        c.fillStyle = 'yellow'
-        c.fill()
-        c.closePath()
+        c.drawImage(this.image, this.position.x - this.radius, this.position.y - this.radius, this.radius * 2, this.radius * 2);
     }
 
     update() {
-        this.draw()
-        this.position.x += this.velocity.x
-        this.position.y += this.velocity.y
+        this.draw();
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
     }
 }
+
 
 class Ghost {
-    constructor({ position, velocity, color = 'red' }) {
-        this.position = position
-        this.velocity = velocity
-        this.radius = 15
-        this.color = color
-        this.prevCollisions = []
+    constructor({ position, velocity }) {
+        this.position = position;
+        this.velocity = velocity;
+        this.radius = 15;
+        this.prevCollisions = [];
+        this.images = [
+            createImage('./Images/ghost1.png'),
+            createImage('./Images/ghost2.png'),
+            createImage('./Images/ghost3.png')
+        ];
+        this.image = this.images[Math.floor(Math.random() * this.images.length)];
     }
 
     draw() {
-        c.beginPath()
-        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
-        c.fillStyle = this.color
-        c.fill()
-        c.closePath()
+        c.drawImage(this.image, this.position.x - this.radius, this.position.y - this.radius, this.radius * 2, this.radius * 2);
     }
 
     update() {
-        this.draw()
-        this.position.x += this.velocity.x
-        this.position.y += this.velocity.y
+        this.draw();
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
     }
 }
+
+
 
 class Pellet {
     constructor({ position }) {
-        this.position = position
-        this.radius = 3
+        this.position = position;
+        this.radius = 6;
+        this.image = new Image();
+        this.image.src = './Images/pellet.png'; 
     }
 
     draw() {
-        c.beginPath()
-        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
-        c.fillStyle = 'white'
-        c.fill()
-        c.closePath()
+        c.drawImage(this.image, this.position.x - this.radius, this.position.y - this.radius, this.radius * 2, this.radius * 2);
     }
 }
 
@@ -485,6 +485,9 @@ function animate() {
         if (Math.hypot(ghost.position.x - player.position.x, ghost.position.y - player.position.y) < ghost.radius + player.radius) {
             cancelAnimationFrame(animationId)
             console.log('you lose')
+            setTimeout(function() {
+                location.reload();
+              }, 5000);
         }
         const collisions = []
         boundaries.forEach((boundary) => {
